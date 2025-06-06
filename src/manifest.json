@@ -314,7 +314,7 @@
       "id": "sq",
       "label": "How to query your data",
       "args": {
-        "initialIsOpen": true
+        "initialIsOpen": false
       },
       "children": [
         {
