@@ -34,6 +34,26 @@
             "initialIsOpen": true,
             "path": "/uc/rag.md"
           }
+        },
+        {
+          "type": "internal-link",
+          "id": "ai_assistant",
+          "label": "Creating an AI Assistant",
+          "summary": "An assistant that temporarily retains conversations and understands by their meaning.",
+          "args": {
+            "initialIsOpen": true,
+            "path": "/uc/ai_assistant.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "redis_use_cases_rag",
+          "label": "Building personalized recommendations",
+          "summary": "Not just keyword matching, but semantic understanding.",
+          "args": {
+            "initialIsOpen": true,
+            "path": "/uc/personalized_recommendations.md"
+          }
         }
       ]
     },
