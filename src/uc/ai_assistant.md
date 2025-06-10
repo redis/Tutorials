@@ -15,15 +15,14 @@ Store chat sessions as Redis hashes. Each message is a field with its own TTL.
 ```redis:[run_confirmation=true] Upload Session Data
 // User-scoped sessions for isolation
 // Pattern: user:{user_id}:session:{session_id}
-HSETEX user:alice:session:morning msg:1717935301 3600 "Good morning! What's my schedule today?"
-HSETEX user:alice:session:morning msg:1717935361 1800 "Remind me about the team meeting at 2 PM"
-HSETEX user:alice:session:morning msg:1717935420 900  "What's the weather forecast?"
-HSETEX user:alice:session:morning msg:1717935480 300  "Thanks, that's all for now"
+HSETEX user:alice:session:morning EX 3600 FIELDS 1 msg:1717935301 "Good morning! What's my schedule today?"
+HSETEX user:alice:session:morning EX 1800 FIELDS 1 msg:1717935361 "Remind me about the team meeting at 2 PM"
+HSETEX user:alice:session:morning EX 900 FIELDS 1 msg:1717935420  "What's the weather forecast?"
+HSETEX user:alice:session:morning EX 300 FIELDS 1 msg:1717935480  "Thanks, that's all for now"
 
 // Different user, same session pattern
-HSETEX user:bob:session:work msg:1717935500 7200 "I need to prepare for the client presentation"
-HSETEX user:bob:session:work msg:1717935560 3600 "What are the key points I should cover?"
-
+HSETEX user:bob:session:work EX 7200 FIELDS 1 msg:1717935500 "I need to prepare for the client presentation"
+HSETEX user:bob:session:work EX 3600 FIELDS 1 msg:1717935560 "What are the key points I should cover?"
 ```
 
 ### Memory Tiers for Different Lifetimes
@@ -31,13 +30,13 @@ Control how long messages last depending on their importance.
 
 ```redis:[run_confirmation=true] Memory Tiers Strategy
 // Short-term (5 minutes) - Immediate context
-HSETEX user:alice:session:current msg:1717935301 300 "Current conversation context"
+HSETEX user:alice:session:current EX 300 FIELDS 1 msg:1717935301 "Current conversation context"
 
 // Medium-term (30 minutes) - Session memory  
-HSETEX user:alice:session:current msg:1717935302 1800 "Important session details"
+HSETEX user:alice:session:current EX 1800 FIELDS 1 msg:1717935302 "Important session details"
 
 // Long-term (2 hours) - Cross-session context
-HSETEX user:alice:session:current msg:1717935303 7200 "Key user preferences and facts"
+HSETEX user:alice:session:current EX 7200 FIELDS 1 msg:1717935303 "Key user preferences and facts"
 ```
 
 ### Check Current Session Memory
@@ -52,43 +51,40 @@ HGETALL user:alice:session:morning
 Create an index to store messages as vectors for semantic search.
 
 ```redis:[run_confirmation=true] Create a Vector Index
-FT.CREATE idx:ai_memory 
-    ON HASH 
-    PREFIX 1 memory: 
-    SCHEMA 
+FT.CREATE idx:ai_memory
+    ON HASH
+    PREFIX 1 memory:
+    SCHEMA
         user_id TAG SORTABLE
-        session_id TAG SORTABLE  
-        message TEXT WEIGHT 2.0 PHONETIC dm:en
-        context TEXT WEIGHT 1.0
+        session_id TAG SORTABLE
+        message TEXT
+        context TEXT
         timestamp NUMERIC SORTABLE
-        embedding VECTOR HNSW 6 
-            TYPE FLOAT32 
-            DIM 8 // DIM = embedding size, DIM 8 is just for demo purposes. In real use, embeddings are usually 128–1536 dimensions.
+        embedding VECTOR HNSW 6
+            TYPE FLOAT32
+            DIM 8 // DIM = embedding size, DIM 8 is just for demo purposes. In real use, embeddings are usually 128–1536
             DISTANCE_METRIC COSINE // COSINE = measures semantic closeness
-            INITIAL_CAP 10000 
-            M 16 
-            EF_CONSTRUCTION 200
 ```
 
 Add sample vectorized messages (embedding dims are demo-sized):
 
 ```redis:[run_confirmation=true] Add entries for the chatbot
-HSET memory:alice:1 user_id "alice" session_id "morning" message "I have a dentist appointment at 3 PM today" context "healthcare scheduling appointment" timestamp 1717935301 embedding "\x00\x00\x80?\x00\x00\x00@\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
-HSET memory:alice:2 user_id "alice" session_id "morning" message "Remind me to water the plants in my office" context "task reminder plants office" timestamp 1717935361 embedding "\x00\x00\x80@\x00\x00\x80@\x00\x00\x80@\x00\x00\x80?\x00\x00\x80?\x00\x00@@"
-HSET memory:alice:3 user_id "alice" session_id "work" message "Schedule a meeting with the engineering team" context "work scheduling meeting team" timestamp 1717935420 embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x00@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80?"
-HSET memory:bob:1 user_id "bob" session_id "work" message "I need to review the quarterly sales report" context "business analysis quarterly report" timestamp 1717935480 embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
+HSET memory:alice:1 user_id "alice" session_id "morning" message "I have a dentist appointment at 3 PM today" context "healthcare scheduling appointment" timestamp 1717935301 embedding "\x3f\x00\x00\x00\x40\x00\x00\x00\x40\x40\x00\x00\x40\x80\x00\x00\x40\x00\x00\x00\x40\x00\x00\x00"
+HSET memory:alice:2 user_id "alice" session_id "morning" message "Remind me to water the plants in my office" context "task reminder plants office" timestamp 1717935361 embedding "\x40\x00\x00\x00\x40\x00\x00\x00\x40\x00\x00\x00\x3f\x00\x00\x00\x3f\x00\x00\x00\x40\x00\x00\x00"
+HSET memory:alice:3 user_id "alice" session_id "work" message "Schedule a meeting with the engineering team" context "work scheduling meeting team" timestamp 1717935420 embedding "\x40\x40\x00\x00\x40\x00\x00\x00\x40\x00\x00\x00\x40\x00\x00\x00\x3f\x00\x00\x00\x3f\x00\x00\x00"
+HSET memory:bob:1 user_id "bob" session_id "work" message "I need to review the quarterly sales report" context "business analysis quarterly report" timestamp 1717935480 embedding "\x40\x40\x00\x00\x40\x00\x00\x00\x3f\x00\x00\x00\x40\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00"
 ```
 
 ### Let Chatbot Think – Semantic Search with Vectors
 When a user says something new, find all related past conversations across your entire system based on semantic meaning.
 
 ```redis:[run_confirmation=false] Find Top 5 Related Messages By Meaning
-FT.SEARCH idx:ai_memory 
-    "*=>[KNN 5 @embedding $query_vec AS vector_score]" 
-    PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
-    RETURN 6 user_id message context vector_score timestamp
-    SORTBY vector_score ASC
-    DIALECT 2
+FT.SEARCH idx:ai_memory
+  "*=>[KNN 5 @embedding $vec AS score]"
+  PARAMS 2 vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
+  RETURN 4 user_id message context timestamp
+  SORTBY score ASC
+  DIALECT 2
 ```
 
 Now your assistant “remembers” things it’s heard before - by meaning.
@@ -100,7 +96,7 @@ Your AI should only recall memories from the specific user it's talking to, not 
 FT.SEARCH idx:ai_memory 
     "(@user_id:{alice}) => [KNN 3 @embedding $query_vec AS vector_score]" 
     PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
-    RETURN 6 user_id message context vector_score session_id
+    RETURN 5 user_id message context vector_score session_id
     SORTBY vector_score ASC
     DIALECT 2
 ```
@@ -124,8 +120,8 @@ When users refer to something from "earlier in our conversation," search only wi
 FT.SEARCH idx:ai_memory 
     "(@user_id:{alice} @session_id:{morning}) => [KNN 10 @embedding $query_vec AS vector_score]" 
     PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
-    RETURN 6 message context vector_score timestamp
-    SORTBY vector_score ASC
+    RETURN 4 message context vector_score timestamp
+    SORTBY vector_score
     DIALECT 2
 ```
 
@@ -138,7 +134,6 @@ HGETALL memory:alice:1
 HGETALL memory:alice:2
 HGETALL memory:alice:3
 HGETALL memory:bob:1
-HGETALL memory:bob:2
 ```
 
 ### Next Steps
