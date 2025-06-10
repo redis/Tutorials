@@ -1,94 +1,149 @@
-Imagine you are building a smart AI assistant that:
-    - Remembers chats, but only temporarily
-    - Thinks by meaning, not by matching exact words
-    - Cleans up after itself, with no manual scripts
+Build a production-ready AI assistant that remembers conversations semantically and auto-cleans using Redis 8’s new features.
 
-Redis 8 has two powerful capabilities to make this happen:
-    - Field-level expiration: Let individual chat messages expire on their own
-    - Vector similarity search: Find past messages based on meaning, not keywords
+This smart AI assistant offers:
+    - **Ephemeral Memory**: Messages expire automatically at different intervals
+    - **Semantic Recall**: Search past chats by meaning, not just keywords
+    - **Zero Maintenance**: No cleanup scripts or cron jobs needed
+    - **Multi-User Support**: Memory isolated by user and session
+    - **Hybrid Search**: Combine text and vector search for better results
 
-Let’s dive in.
+**Note**: [Redis 8](https://hub.docker.com/_/redis/tags) is required for this tutorial Redis 8 since it introduces `HSETEX`, which lets you set TTL per hash field, ideal for ephemeral chat memory without complex expiration logic.
 
-### Short-Term Memory with Field-Level Expiry
-Each chat session is stored as a Redis Hash.
-Each message is a field in the hash.
-Redis 8’s new HSETEX command allows you to assign a TTL to each field, perfect for building ephemeral, session-level memory.
+### Hierarchical Memory Structure
+Store chat sessions as Redis hashes. Each message is a field with its own TTL.
 
 ```redis:[run_confirmation=true] Upload Session Data
-// session:42 is the session ID
-// msg:<timestamp> ensures uniqueness and traceability
-HSETEX session:42 msg:1717935301 120 "Hi Chatbot!"
-HSETEX session:42 msg:1717935361 180 "What can you do?"
-HSETEX session:42 msg:1717935440 90 "Can you remind me about my tasks?"
-HSETEX session:42 msg:1717935720 30  "What's the news today?"
+// User-scoped sessions for isolation
+// Pattern: user:{user_id}:session:{session_id}
+HSETEX user:alice:session:morning msg:1717935301 3600 "Good morning! What's my schedule today?"
+HSETEX user:alice:session:morning msg:1717935361 1800 "Remind me about the team meeting at 2 PM"
+HSETEX user:alice:session:morning msg:1717935420 900  "What's the weather forecast?"
+HSETEX user:alice:session:morning msg:1717935480 300  "Thanks, that's all for now"
+
+// Different user, same session pattern
+HSETEX user:bob:session:work msg:1717935500 7200 "I need to prepare for the client presentation"
+HSETEX user:bob:session:work msg:1717935560 3600 "What are the key points I should cover?"
+
 ```
 
-Each field automatically expires after its TTL (in seconds).
-No need for cron jobs or background workers.
-What you get:
-    - Clean memory
-    - Zero manual cleanup
-    - Session-scoped retention, just like short-term memory in humans
+### Memory Tiers for Different Lifetimes
+Control how long messages last depending on their importance.
 
+```redis:[run_confirmation=true] Memory Tiers Strategy
+// Short-term (5 minutes) - Immediate context
+HSETEX user:alice:session:current msg:1717935301 300 "Current conversation context"
 
-Try it: After a few minutes, run `HGETALL session:42` and see what's left.
+// Medium-term (30 minutes) - Session memory  
+HSETEX user:alice:session:current msg:1717935302 1800 "Important session details"
 
-### Vector Search for Semantic Recall
-Now, your assistant needs to “recall” semantically related messages, not just match by words.
-To do that, you’ll:
-    - Convert messages to vector embeddings
-    - Store them in Redis
-    - Use Vector Search with FT.SEARCH for semantic retrieval
+// Long-term (2 hours) - Cross-session context
+HSETEX user:alice:session:current msg:1717935303 7200 "Key user preferences and facts"
+```
+
+### Check Current Session Memory
+No manual cleanup needed; expired messages vanish automatically.
+
+```redis:[run_confirmation=true] Monitor Session State Over Time
+// After a few minutes, run this command to see what's left.
+HGETALL user:alice:session:morning
+```
+
+### Vector Search Setup for Semantic Recall
+Create an index to store messages as vectors for semantic search.
 
 ```redis:[run_confirmation=true] Create a Vector Index
-FT.CREATE idx:memory ON HASH PREFIX 1 memory: SCHEMA
-    message TEXT
-    embedding VECTOR FLAT // FLAT = exact vector search
-    6
-        TYPE FLOAT32
-        DIM 8 // DIM = embedding size, DIM 8 is just for demo purposes. In real use, embeddings are usually 128–1536 dimensions.
-        DISTANCE_METRIC COSINE // COSINE = measures semantic closeness
+FT.CREATE idx:ai_memory 
+    ON HASH 
+    PREFIX 1 memory: 
+    SCHEMA 
+        user_id TAG SORTABLE
+        session_id TAG SORTABLE  
+        message TEXT WEIGHT 2.0 PHONETIC dm:en
+        context TEXT WEIGHT 1.0
+        timestamp NUMERIC SORTABLE
+        embedding VECTOR HNSW 6 
+            TYPE FLOAT32 
+            DIM 8 // DIM = embedding size, DIM 8 is just for demo purposes. In real use, embeddings are usually 128–1536 dimensions.
+            DISTANCE_METRIC COSINE // COSINE = measures semantic closeness
+            INITIAL_CAP 10000 
+            M 16 
+            EF_CONSTRUCTION 200
 ```
 
-Now, let’s add entries for your chatbots:
+Add sample vectorized messages (embedding dims are demo-sized):
 
 ```redis:[run_confirmation=true] Add entries for the chatbot
-// Embeddings are stored as binary FLOAT32 vectors - this is a compact format required by Redis Vector Serch indexes
-HSET memory:1 message "Book a dentist appointment"       embedding "\x00\x00\x80?\x00\x00\x00@\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
-HSET memory:2 message "Remind me to water plants"        embedding "\x00\x00\x80@\x00\x00\x80@\x00\x00\x80@\x00\x00\x80?\x00\x00\x80?\x00\x00@@"
-HSET memory:3 message "What’s the weather like?"         embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x00@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80?"
-HSET memory:4 message "Cancel my gym session"            embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
-HSET memory:5 message "Start a new shopping list"        embedding "\x00\x00\x00@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80@\x00\x00\x80?\x00\x00@@"
+HSET memory:alice:1 user_id "alice" session_id "morning" message "I have a dentist appointment at 3 PM today" context "healthcare scheduling appointment" timestamp 1717935301 embedding "\x00\x00\x80?\x00\x00\x00@\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
+HSET memory:alice:2 user_id "alice" session_id "morning" message "Remind me to water the plants in my office" context "task reminder plants office" timestamp 1717935361 embedding "\x00\x00\x80@\x00\x00\x80@\x00\x00\x80@\x00\x00\x80?\x00\x00\x80?\x00\x00@@"
+HSET memory:alice:3 user_id "alice" session_id "work" message "Schedule a meeting with the engineering team" context "work scheduling meeting team" timestamp 1717935420 embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x00@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80?"
+HSET memory:bob:1 user_id "bob" session_id "work" message "I need to review the quarterly sales report" context "business analysis quarterly report" timestamp 1717935480 embedding "\x00\x00@@\x00\x00\x00@\x00\x00\x80?\x00\x00\x80@\x00\x00\x00@\x00\x00\x00@"
 ```
 
-Now your messages are vectorized and ready for search.
-
 ### Let Chatbot Think – Semantic Search with Vectors
-When a user sends a new message, convert it to an embedding and run a KNN search:
+When a user says something new, find all related past conversations across your entire system based on semantic meaning.
 
-```redis:[run_confirmation=true] Search For Similar Messages
-// Returns the top 3 semantically similar messages, even if no words match directly.
-FT.SEARCH idx:memory "*=>[KNN 3 @embedding $vec AS score]"
-   PARAMS 2 vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
-   SORTBY score
-   DIALECT 2
+```redis:[run_confirmation=false] Find Top 5 Related Messages By Meaning
+FT.SEARCH idx:ai_memory 
+    "*=>[KNN 5 @embedding $query_vec AS vector_score]" 
+    PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
+    RETURN 6 user_id message context vector_score timestamp
+    SORTBY vector_score ASC
+    DIALECT 2
 ```
 
 Now your assistant “remembers” things it’s heard before - by meaning.
 
-### Real-Time Session Cleanup – Redis Handles It
-Want to check what's still in memory?
+### User-Scoped Semantic Search
+Your AI should only recall memories from the specific user it's talking to, not leak information between users.
 
-```redis:[run_confirmation=false] Check Sessions
-HGETALL session:42
+```redis:[run_confirmation=false] Find Similar Memories For Specific User Only
+FT.SEARCH idx:ai_memory 
+    "(@user_id:{alice}) => [KNN 3 @embedding $query_vec AS vector_score]" 
+    PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
+    RETURN 6 user_id message context vector_score session_id
+    SORTBY vector_score ASC
+    DIALECT 2
 ```
 
-Only the unexpired fields remain. Redis does the cleanup invisibly in the background.
-Your assistant has a clean, focused mind at all times.
+### Time-Bounded Semantic Search
+When users ask about "recent" things, limit your search to a specific time window while still using semantic matching.
+
+```redis:[run_confirmation=false] Find recent similar memories (last 24 hours)
+FT.SEARCH idx:ai_memory 
+    "(@timestamp:[1717849200 +inf]) => [KNN 3 @embedding $query_vec AS vector_score]" 
+    PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
+    RETURN 6 message timestamp vector_score
+    SORTBY timestamp DESC
+    DIALECT 2
+```
+
+### Session-Specific Recall
+When users refer to something from "earlier in our conversation," search only within the current session context.
+
+```
+FT.SEARCH idx:ai_memory 
+    "(@user_id:{alice} @session_id:{morning}) => [KNN 10 @embedding $query_vec AS vector_score]" 
+    PARAMS 2 query_vec "\x00\x00@@\x00\x00\x80@\x00\x00\x00@\x00\x00\x80?\x00\x00@@\x00\x00\x00@"
+    RETURN 6 message context vector_score timestamp
+    SORTBY vector_score ASC
+    DIALECT 2
+```
+
+### Want to check what's still in memory?
+
+Only unexpired fields remain.
+
+```redis:[run_confirmation=false] Check Sessions
+HGETALL memory:alice:1
+HGETALL memory:alice:2
+HGETALL memory:alice:3
+HGETALL memory:bob:1
+HGETALL memory:bob:2
+```
 
 ### Next Steps
 Now that your assistant has memory and meaning, you can:
-    - Tie session messages to store embeddings for per-session recall
-    - Use RAG (Retrieval-Augmented Generation) by combining Redis Vector Search with LLMs
-    - Add per-user memory: prefix session keys with a user ID (user:42:session:...)
-    - Introduce a fallback to persistent storage for long-term memory using Redis Flex
+    - Combine Redis Vector Search with LLMs (RAG)
+    - Use OpenAI or sentence-transformers for embeddings
+    - Add fallback persistent storage with Redis Flex
+    - Manage users with ACLs, quotas, and keyspace notifications
