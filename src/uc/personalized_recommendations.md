@@ -1,10 +1,11 @@
-Imagine you’re building a movie recommendation app, and your users expect intuitive, meaningful results, not just keyword matches, but intelligent understanding.
-
-Not just keyword matching, but semantic understanding — powered by vector embeddings. These are numerical representations of text that capture meaning, allowing you to search by intent rather than exact words.
+Imagine you’re building a movie recommendation app that goes beyond simple keyword matching. Your users want recommendations based on the meaning of the movie plots — an intuitive and meaningful search experience powered by semantic understanding.
 
 ### Store Movie Documents with Vector Embeddings
-
-Let’s import a dataset containing plot summaries, each paired with an embedding vector. Each movie JSON document contains metadata like title, genre, year, and a vector embedding of the plot.
+Semantic search uses vector embeddings — numerical representations of text that capture the meaning of sentences. This enables search by intent rather than just keywords.
+Let’s import a dataset containing plot summaries, each paired with an embedding vector.
+Each movie is stored as a JSON document with:
+    - `title`, `genres`, `year`, `plot`
+    - `embedding`, which is a binary-encoded `FLOAT32[]` used for vector similarity that can be generated using sentence-transformers or similar libraries. Demo uses 8-dim vectors; production models typically use 128–1536 dimensions.
 
 ```redis:[run_confirmation=true] Upload Movies
 JSON.SET movie:001 $ '{"title":"Toy Story","genres":["Animation","Comedy","Family"],"plot":"Toys come to life when humans arent around.","year":1995,"embedding":[0.22,0.04,0.33,0.12,-0.02,0.17,0.09,0.01]}'
@@ -154,7 +155,6 @@ FT.SEARCH idx:movies '@genres:{"Animated"|"Sci-Fi"} =>[KNN 5 @embedding $vec AS 
 This makes Redis recommendations responsive to evolving user preferences without retraining embeddings.
 
 ### Next Steps
-    - Now that you’ve seen the basics, here are a few ideas to extend this:
-    - Build personalized watchlists based on user preferences and past behavior.
-    - Power chatbots that provide context-aware movie suggestions.
-    - Blend keyword and vector search for a richer discovery experience.
+    - Build a UI that lets users type natural language queries and get semantic recommendations instantly
+    - Add personalization by combining user preferences with semantic search
+    - Explore advanced vector search techniques like HNSW indexing for large datasets
