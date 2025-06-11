@@ -1,13 +1,16 @@
-Imagine you’re building a movie recommendation app that goes beyond simple keyword matching. Your users want recommendations based on the meaning of the movie plots — an intuitive and meaningful search experience powered by semantic understanding.
+Imagine building a movie recommendation app that goes beyond keyword matching. Your users get intuitive, meaningful suggestions based on the true meaning of movie plots — powered by semantic understanding.
 
 ### Store Movie Documents with Vector Embeddings
-Semantic search uses vector embeddings — numerical representations of text that capture the meaning of sentences. This enables search by intent rather than just keywords.
-Let’s import a dataset containing plot summaries, each paired with an embedding vector.
+Semantic search uses vector embeddings — numeric representations of text that capture meaning, enabling search by intent rather than keywords.
+
+We'll import a dataset of plot summaries, each paired with an embedding vector.
+
 Each movie is stored as a JSON document with:
-    - `title`, `genres`, `year`, `plot`
-    - `embedding`, which is a binary-encoded `FLOAT32[]` used for vector similarity that can be generated using sentence-transformers or similar libraries. Demo uses 8-dim vectors; production models typically use 128–1536 dimensions.
+  - `title`, `genres`, `year`, `plot`
+  - `embedding`: a binary-encoded `FLOAT32[]` for vector similarity, generated via sentence-transformer models or similar.
 
 ```redis:[run_confirmation=true] Upload Movies
+// Demo uses 8 DIM embeddings; production typically uses 128–1536D.
 JSON.SET movie:001 $ '{"title":"Toy Story","genres":["Animation","Comedy","Family"],"plot":"Toys come to life when humans arent around.","year":1995,"embedding":[0.22,0.04,0.33,0.12,-0.02,0.17,0.09,0.01]}'
 JSON.SET movie:002 $ '{"title":"Inside Out","genres":["Animation","Comedy","Drama"],"plot":"Emotions guide a young girl through change.","year":2015,"embedding":[0.20,0.03,0.31,0.11,-0.03,0.16,0.08,0.02]}'
 JSON.SET movie:003 $ '{"title":"Whiplash","genres":["Drama","Music"],"plot":"A young drummer is pushed to greatness.","year":2014,"embedding":[0.14,0.01,0.22,0.08,-0.07,0.10,0.04,0.00]}'
@@ -66,7 +69,7 @@ JSON.SET movie:55 $ '{"title":"All That Jazz","year":1979,"genres":["Drama","Mus
 ```
 
 ### Create a Vector-Enabled Search Index
-Redis stores movie data as JSON documents with text fields (title, genres, plot) and vector embeddings. Creating an index lets you quickly filter documents and run fast approximate nearest neighbor (ANN) searches on embeddings.
+Redis stores movie data as JSON documents with text fields (title, genres, plot) and vector embeddings. Indexing enables fast filtering and approximate nearest neighbor (ANN) searches on embeddings.
 
 ```redis:[run_confirmation=true] Create a Vector Index
 FT.CREATE idx:movies ON JSON PREFIX 1 "movie:" SCHEMA
@@ -84,7 +87,7 @@ FT.CREATE idx:movies ON JSON PREFIX 1 "movie:" SCHEMA
 This sets the stage for combined textual and semantic search.
 
 ### Semantic Search by Query Embedding
-When users search: “I want a fun animated movie about toys and friendship.”, you can generate embeddings using models like text-embedding-3-small from OpenAI, or sentence-transformers from Hugging Face. These models turn text into numerical vectors you can store and query with Redis.
+When users search “I want a fun animated movie about toys and friendship”, sentence-transformers models can convert the text into a vector. You can store and query this vector in Redis for semantic search.
 
 ```redis:[run_confirmation=false] Search Per Plot
 FT.SEARCH idx:movies "*=>[KNN 3 @embedding $vec AS score]"
@@ -119,7 +122,7 @@ Let’s say you love Inception and want similar movies. Let’s retrieve the Inc
 ```redis:[run_confirmation=false] Get the Embedding From the Movie Document
 JSON.GET movie:006 $.embedding
 ```
-Now let’s run vector similarity search using that embedding as a binary blob (FLOAT32-packed):
+Now let’s run vector similarity search using that embedding as a binary blob (`FLOAT32`-packed):
 
 ```redis:[run_confirmation=false] Search for Similar Movies
 FT.SEARCH idx:movies "*=>[KNN 5 @embedding $vec AS score]" 
@@ -155,6 +158,7 @@ FT.SEARCH idx:movies '@genres:{"Animated"|"Sci-Fi"} =>[KNN 5 @embedding $vec AS 
 This makes Redis recommendations responsive to evolving user preferences without retraining embeddings.
 
 ### Next Steps
-    - Build a UI that lets users type natural language queries and get semantic recommendations instantly
-    - Add personalization by combining user preferences with semantic search
-    - Explore advanced vector search techniques like HNSW indexing for large datasets
+  - Learn more about building personalized recommendations with this [workshop](https://github.com/redis-developer/redis-movies-searcher/tree/springio-2025-workshop).
+  - Build a UI for natural language queries that delivers instant semantic recommendations.
+  - Add personalization by merging user preferences with semantic search.
+  - Explore advanced vector search methods like HNSW indexing for large datasets.
