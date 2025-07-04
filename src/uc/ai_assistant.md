@@ -14,10 +14,10 @@ AI assistants need context from previous messages to provide coherent responses.
 
 ```redis:[run_confirmation=true] Store conversation history
 // Add user message to session
-LPUSH user:alice:history:session_001 '{"type": "human", "content": "What's the weather like?", "timestamp": 1717935001}'
+LPUSH user:alice:history:session_001 '{"type": "human", "content": "What is the weather like?", "timestamp": 1717935001}'
 
 // Add AI response
-LPUSH user:alice:history:session_001 '{"type": "ai", "content": "It's sunny with 75°F temperature.", "timestamp": 1717935002}'
+LPUSH user:alice:history:session_001 '{"type": "ai", "content": "It is sunny with 75°F temperature.", "timestamp": 1717935002}'
 
 // Add another user message
 LPUSH user:alice:history:session_001 '{"type": "human", "content": "Should I bring an umbrella?", "timestamp": 1717935003}'
@@ -73,7 +73,7 @@ The `HINCR` command allows you to atomically increment the counter, preventing r
 
 ```redis:[run_confirmation=true] Increment Requests
 // Increment request counter
-HINCR user:alice:rate_limit requests_per_minute
+HINCRBY user:alice:rate_limit requests_per_minute 1
 
 // Check if field exists and get count
 HEXISTS user:alice:rate_limit requests_per_minute
@@ -164,7 +164,7 @@ FT.SEARCH idx:knowledge
 FT.SEARCH idx:knowledge
     "(@user_id:{alice} @timestamp:[1717935000 +inf]) => [KNN 5 @embedding $vec AS score]"
     PARAMS 2 vec "\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x00\x00\x00\x40\x60\x00\x00"
-    RETURN 4 content timestamp score
+    RETURN 3 content timestamp score
     SORTBY score ASC
     DIALECT 2
 ```
