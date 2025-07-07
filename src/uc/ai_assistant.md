@@ -1,6 +1,6 @@
 This tutorial demonstrates how to build an AI assistant's memory system with Redis as its memory core.
 
-**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes, which is ideal for managing short-term memory with precision.
+**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes, which is ideal for rate limiting to ensure fair resource usage.
 
 ### Architecture Overview
 | Layer | Description | Data type |
