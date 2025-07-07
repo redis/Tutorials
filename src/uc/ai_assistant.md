@@ -1,16 +1,16 @@
 This tutorial demonstrates how to build an AI assistant's memory system with Redis as its memory core.
 
-**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes, which is ideal for rate limiting to ensure fair resource usage.
+**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes - ideal for rate limiting to ensure fair resource usage.
 
 ### Architecture Overview
 | Layer | Description | Data type |
 | ---------- | ---------- | ---------- |
 | `Session History`| `Recent conversation context` | List |
 | `Rate Limiting` | `Per-user request throttling` | Hash |
-| `Knowledge Base` | `Long-term facts and preferences` | Hash |
+| `User Memory` | `Long-term facts and preferences` | Hash |
 
 ### Session History
-AI assistants need context from previous messages to provide coherent responses. Without conversation history, each interaction would be isolated and the AI couldn't reference what was discussed earlier. We can store conversation history using Redis lists - simple, ordered, and efficient for chat scenarios.
+AI assistants need context from previous messages to provide coherent responses. Without conversation history, each interaction would be isolated. Redis lists are simple, ordered, and efficient for storing chat transcripts.
 
 ```redis:[run_confirmation=true] Store conversation history
 // Add user message to session
@@ -26,23 +26,22 @@ LPUSH user:alice:history:session_001 '{"type": "human", "content": "Should I bri
 LPUSH user:alice:history:session_001 '{"type": "ai", "content": "No umbrella needed today!", "timestamp": 1717935004}'
 ```
 ### Reading Conversation History
-Now we can retrieve conversation history to provide context to the AI.
+You can retrieve recent messages to provide context to the AI.
 
-```redis:[run_confirmation=true] Read conversation history
-// Get last 5 messages (most recent first)
+```redis:[run_confirmation=no] Read conversation history
+// Get the 5 most recent messages
 LRANGE user:alice:history:session_001 0 4
 
-// Get all messages in session
+// Get the full session
 LRANGE user:alice:history:session_001 0 -1
-
-// Get specific message by index
-LINDEX user:alice:history:session_001 0
-
-// Check how many messages in session
-LLEN user:alice:history:session_001
 ```
+You may want to limit the size of history to retain only the N most recent items. Use LTRIM:
+```redis:[run_confirmation=yes] Read conversation history
+LTRIM user:alice:history:session_001 0 29  // keep only latest 30 items
+```
+
 ### Session Expiration
-Without expiration, conversation history would accumulate indefinitely, consuming memory and potentially exposing sensitive information. TTL ensures privacy and efficient memory usage.
+Without expiration, session history will accumulate indefinitely. Expiring keys improves memory usage and ensures privacy.
 
 ```redis:[run_confirmation=true] Session expiration
 // Set session to expire in 24 hours
@@ -59,14 +58,11 @@ PERSIST user:alice:history:session_001
 ```
 
 ### Rate Limiting
-Rate limiting prevents abuse and ensures fair resource usage. Without it, users could overwhelm the system with requests, degrading performance for everyone.
+Rate limiting prevents abuse and ensures fair usage across users. Redis hashes with field-level TTL via `HSETEX` are ideal for this.
 
 ```redis:[run_confirmation=true] Initialize Rate Limiting
-// First request - set counter with 1-minute TTL
+// On first request - set counter with 1-minute TTL
 HSETEX user:alice:rate_limit EX 60 FIELDS 1 requests_per_minute 1
-
-// Check current request count
-HGET user:alice:rate_limit requests_per_minute
 ```
 
 The `HINCR` command allows you to atomically increment the counter, preventing race conditions in high-concurrency scenarios.
@@ -82,6 +78,7 @@ HGET user:alice:rate_limit requests_per_minute
 // Check TTL on the hash
 TTL user:alice:rate_limit
 ```
+**Optionally**: if the count exceeds the allowed threshold, deny the operation.
 
 Different time windows serve different purposes - per-minute prevents burst attacks, per-hour prevents sustained abuse, per-day enforces usage quotas.
 ```redis:[run_confirmation=true] Rate Limiting with Different Time Windows
@@ -95,39 +92,38 @@ HSETEX user:alice:rate_limit EX 86400 FIELDS 1 requests_per_day 1
 HGETALL user:alice:rate_limit
 ```
 
-### Knowledge Base (Persistent Memory)
-AI assistants become more helpful when they remember user preferences, important facts, and context across sessions. This creates a personalized experience that improves over time.
-Remembering user preferences (meeting times, communication style) enables the AI to provide more relevant and personalized responses without asking the same questions repeatedly.
+### User Memory (Persistent Preferences)
+AI assistants become more helpful when they remember user preferences, schedules, or relevant facts. This persistent memory enables personalization over time.
 
 ```redis:[run_confirmation=true] Store User Preferences
 // Always secure sensitive data using encryption at rest, access control (Redis ACLs), and comply with data protection laws (e.g., GDPR).
-// Store morning preference
-HSET user:alice:knowledge:pref:001 user_id "alice" content "prefers morning appointments before 10 AM" importance 9 timestamp 1717935000 embedding "\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x3f\x40\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x00\x00\x00\x40\x80\x00\x00"
+// These values are stored with embeddings to support semantic recall later using vector search.
+HSET user:alice:pref:001 user_id "alice" content "prefers morning appointments before 10 AM" importance 9 timestamp 1717935000 embedding "\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x3f\x40\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x00\x00\x00\x40\x80\x00\x00"
 
 // Storing communication preference
-HSET user:alice:knowledge:pref:002 user_id "alice" content "likes detailed explanations with examples" importance 8 timestamp 1717935000 embedding "\x3f\x40\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x80\x00\x00\x3f\x00\x00\x00"
+HSET user:alice:pref:002 user_id "alice" content "likes detailed explanations with examples" importance 8 timestamp 1717935000 embedding "\x3f\x40\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x80\x00\x00\x3f\x00\x00\x00"
 
 // Store work schedule preference
-HSET user:alice:knowledge:pref:003 user_id "alice" content "works remotely on Fridays" importance 7 timestamp 1717935000 embedding "\x40\x80\x00\x00\x3f\x00\x00\x00\x40\x40\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00"
+HSET user:alice:pref:003 user_id "alice" content "works remotely on Fridays" importance 7 timestamp 1717935000 embedding "\x40\x80\x00\x00\x3f\x00\x00\x00\x40\x40\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00"
 
 // Store health information
-HSET user:alice:knowledge:personal:001 user_id "alice" content "allergic to shellfish and nuts" importance 10 timestamp 1717935000 embedding "\x40\x00\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x60\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x3f\x00\x00\x00"
+HSET user:alice:personal:001 user_id "alice" content "allergic to shellfish and nuts" importance 10 timestamp 1717935000 embedding "\x40\x00\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x60\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x3f\x00\x00\x00"
 
 // Store pet information
-HSET user:alice:knowledge:personal:002 user_id "alice" content "has a golden retriever named Max, 3 years old" importance 7 timestamp 1717935000 embedding "\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x00\x00\x00\x40\x60\x00\x00"
+HSET user:alice:personal:002 user_id "alice" content "has a golden retriever named Max, 3 years old" importance 7 timestamp 1717935000 embedding "\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x00\x00\x00\x40\x60\x00\x00"
 
 // Store family information
-HSET user:alice:knowledge:personal:003 user_id "alice" content "married to Bob, two kids Sarah (8) and Tom (5)" importance 9 timestamp 1717935000 embedding "\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x3f\x00\x00\x00"
+HSET user:alice:personal:003 user_id "alice" content "married to Bob, two kids Sarah (8) and Tom (5)" importance 9 timestamp 1717935000 embedding "\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x3f\x00\x00\x00"
 ```
 
 ### Vector Search: Semantic Memory Recall
-Traditional keyword search misses semantic meaning. When a user asks about "scheduling meetings," vector search can find relevant information about "prefers morning appointments" even though the keywords don't match exactly.
+Semantic search allows AI to retrieve relevant memory even when exact keywords don't match. For example, a query about "meetings" might return facts about "morning appointments."
 
-Indexing persistent memory (knowledge base) for semantically meaningful search.
+Indexing persistent memory (User Memory) for semantically meaningful search.
 
 ```redis:[run_confirmation=true] Create a Vector Index
 // Create index for semantic search
-FT.CREATE idx:knowledge
+FT.CREATE idx:preferences
     ON HASH
     PREFIX 1 user:
     SCHEMA
@@ -137,14 +133,14 @@ FT.CREATE idx:knowledge
         timestamp NUMERIC
         embedding VECTOR HNSW 6
             TYPE FLOAT32
-            DIM 8 // DIM = embedding size, DIM 8 is just for demo purposes. In real use, embeddings are usually 128–1536 dimensions.
+            DIM 8 // DIM 8 is only for demonstration purposes. Real embeddings are typically 128–1536 dimensions depending on the model (e.g., sentence-transformers).
             DISTANCE_METRIC COSINE
 ```
 
 ### Search for most relevant memory entries
 
-```redis:[run_confirmation=false] Find Top 5 Most Relevant Knowledge Items
-FT.SEARCH idx:knowledge 
+```redis:[run_confirmation=false] Find Top 5 Most Relevant User Memory Items
+FT.SEARCH idx:preferences 
     "(@user_id:{alice}) => [KNN 5 @embedding $vec AS score]" 
     PARAMS 2 vec "\x40\x00\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x60\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x3f\x00\x00\x00"
     RETURN 4 content importance score timestamp
@@ -153,15 +149,15 @@ FT.SEARCH idx:knowledge
 ```
 
 ```redis:[run_confirmation=false] Search High-Importance Items Only
-FT.SEARCH idx:knowledge
+FT.SEARCH idx:preferences
     "(@user_id:{alice} @importance:[8 +inf]) => [KNN 3 @embedding $vec AS score]"
     PARAMS 2 vec "\x40\x40\x00\x00\x3f\x00\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00"
     RETURN 4 content importance score timestamp
     SORTBY score ASC
     DIALECT 2
 ```
-```redis:[run_confirmation=false] Search Recent Knowledge Only
-FT.SEARCH idx:knowledge
+```redis:[run_confirmation=false] Search Recent User Memories
+FT.SEARCH idx:preferences
     "(@user_id:{alice} @timestamp:[1717935000 +inf]) => [KNN 5 @embedding $vec AS score]"
     PARAMS 2 vec "\x3f\x80\x00\x00\x40\x40\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x00\x00\x00\x40\x60\x00\x00"
     RETURN 3 content timestamp score
@@ -172,28 +168,30 @@ FT.SEARCH idx:knowledge
 ### Memory State Monitoring
 Understanding what's stored in memory helps debug issues, optimize performance, and ensure data quality. It's also essential for user privacy compliance.
 ```redis:[run_confirmation=false] Monitor user sessions
-// Scan 10,000 keys to find user sessions
-SCAN 0 MATCH user:*:history:* COUNT 10000
+// Get approximate memory usage of session
+MEMORY USAGE user:alice:history:session_001
 
 // Get session statistics
 LLEN user:alice:history:session_001
 TTL user:alice:history:session_001
 ```
 ### Data Cleanup
+Remove all data related to a user (e.g., for GDPR compliance).
+
 ```redis:[run_confirmation=true] Delete user data
 // Remove all user data (GDPR compliance)
 DEL user:alice:history:session_001
 DEL user:alice:history:session_002
 DEL user:alice:rate_limit
-DEL user:alice:knowledge:pref:001
-DEL user:alice:knowledge:pref:002
-DEL user:alice:knowledge:pref:003
-DEL user:alice:knowledge:personal:001
-DEL user:alice:knowledge:personal:002
-DEL user:alice:knowledge:personal:003
-DEL user:alice:knowledge:work:001
-DEL user:alice:knowledge:work:002
-DEL user:alice:knowledge:work:003
+DEL user:alice:pref:001
+DEL user:alice:pref:002
+DEL user:alice:pref:003
+DEL user:alice:personal:001
+DEL user:alice:personal:002
+DEL user:alice:personal:003
+DEL user:alice:work:001
+DEL user:alice:work:002
+DEL user:alice:work:003
 ```
 
 ### Next Steps
