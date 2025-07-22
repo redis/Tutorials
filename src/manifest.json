@@ -39,7 +39,7 @@
           "type": "internal-link",
           "id": "ai_assistant",
           "label": "Creating an AI Assistant",
-          "summary": "An assistant that temporarily retains conversations and understands by their meaning.",
+          "summary": "An assistant that temporarily remembers conversations and understands their meaning.",
           "args": {
             "initialIsOpen": true,
             "path": "/uc/ai_assistant.md"
