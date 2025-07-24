@@ -34,26 +34,6 @@
             "initialIsOpen": true,
             "path": "/uc/rag.md"
           }
-        },
-        {
-          "type": "internal-link",
-          "id": "ai_assistant",
-          "label": "Creating an AI Assistant",
-          "summary": "An assistant that temporarily remembers conversations and understands their meaning.",
-          "args": {
-            "initialIsOpen": true,
-            "path": "/uc/ai_assistant.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "redis_use_cases_rag",
-          "label": "Building personalized recommendations",
-          "summary": "Not just keyword matching, but semantic understanding.",
-          "args": {
-            "initialIsOpen": true,
-            "path": "/uc/personalized_recommendations.md"
-          }
         }
       ]
     },
@@ -423,18 +403,29 @@
         },
         {
           "type": "internal-link",
-          "id": "vss-vectors-basic",
-          "label": "Vector search (basic)",
+          "id": "e-commerce-discovery",
+          "label": "E-commerce Discovery",
+          "summary": "Find products by meaning, not just keywords.",
           "args": {
-            "path": "/vss/vectors-basic.md"
+            "path": "/vss/e-commerce-discovery.md"
           }
         },
         {
           "type": "internal-link",
-          "id": "vss-vectors-adv-hash",
-          "label": "Vector search (advanced)",
+          "id": "ai_assistant",
+          "label": "Creating an AI Assistant",
+          "summary": "An assistant that temporarily remembers conversations and understands their meaning.",
           "args": {
-            "path": "/vss/vectors-adv-hash.md"
+            "path": "/uc/ai_assistant.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "personalized_recommendations",
+          "label": "Building personalized recommendations",
+          "summary": "Suggest movies based on the true meaning of plots or themes.",
+          "args": {
+            "path": "/uc/personalized_recommendations.md"
           }
         },
         {
