@@ -1,4 +1,4 @@
-The JSON capability of Redis Stack provides JavaScript Object Notation (JSON) support for Redis, which allows Redis to function as a document database.
+The JSON capability provides JavaScript Object Notation (JSON) support for Redis, which allows Redis to function as a document database.
 It lets you store, update, and retrieve JSON values in a Redis database, similar to any other Redis data type. Redis JSON also works seamlessly with Search and Query to let you index and query JSON documents.
 
 Primary features include:
