@@ -16,7 +16,7 @@ Machine learning models have facilitated the rise of embeddings as a widely embr
 
 Given a suitable machine learning model, the generated embeddings can encapsulate complex patterns and semantic meanings inherent in data.
 
-You can use Redis Stack as a vector database, which allows you to:
+You can use Redis 8 as a vector database, which allows you to:
 
 - Store vectors and the associated metadata within hashes or JSON documents
 - Retrieve vectors
@@ -25,8 +25,8 @@ You can use Redis Stack as a vector database, which allows you to:
 
 ### Prerequisites
 
-[Redis Stack](https://redis.io/downloads/?utm_source=redisinsight&utm_medium=app&utm_campaign=vss_tutorial) >=7.2.0-v7 \
+[Redis 8](https://hub.docker.com/layers/library/redis/8.0.3/images/sha256-426e6823fb1778e8c49f327f9e5af00e505a7fca726ffe11b7930eb1d99ef5fd) or higher \
 OR \
 [RediSearch](https://github.com/RediSearch/RediSearch/) >=2.8.11 \
 OR \
-A free Redis Stack instance on [Redis Cloud](https://redis.com/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=vss_tutorial).
+A free Redis instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=timeseries_tutorial).
