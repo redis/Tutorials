@@ -48,8 +48,8 @@ The following data structures trade perfect accuracy for extreme memory efficien
 
 ### Prerequisites
 
-[Redis Stack Server](https://redis.io/downloads/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial) >=7.2.0-v7 \
+[Redis 8](https://hub.docker.com/layers/library/redis/8.0.3/images/sha256-426e6823fb1778e8c49f327f9e5af00e505a7fca726ffe11b7930eb1d99ef5fd) or higher \
 OR \
 [RedisBloom](https://oss.redis.com/redisbloom/) >=2.6.10 \
 OR \
-A free Redis Stack instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial).
+A free Redis instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=timeseries_tutorial).
