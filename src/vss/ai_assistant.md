@@ -2,14 +2,14 @@ This tutorial demonstrates how to build an AI assistant's memory system with Red
 
 **Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes - ideal for rate limiting to ensure fair resource usage.
 
-### Architecture Overview
+### Architecture overview
 | Layer | Description | Data type |
 | ---------- | ---------- | ---------- |
 | `Session History`| `Recent conversation context` | List |
 | `Rate Limiting` | `Per-user request throttling` | Hash |
 | `User Memory` | `Long-term facts and preferences` | Hash |
 
-### Session History
+### Session history
 AI assistants need context from previous messages to provide coherent responses. Without conversation history, each interaction would be isolated. Redis lists are simple, ordered, and efficient for storing chat transcripts.
 
 ```redis:[run_confirmation=true] Store conversation history
@@ -25,7 +25,7 @@ LPUSH user:alice:history:session_001 '{"type": "human", "content": "Should I bri
 // Add AI response
 LPUSH user:alice:history:session_001 '{"type": "ai", "content": "No umbrella needed today!", "timestamp": 1717935004}'
 ```
-### Reading Conversation History
+### Reading conversation history
 You can retrieve recent messages to provide context to the AI.
 
 ```redis:[run_confirmation=no] Read conversation history
@@ -40,7 +40,7 @@ You may want to limit the size of history to retain only the N most recent items
 LTRIM user:alice:history:session_001 0 29  // keep only latest 30 items
 ```
 
-### Session Expiration
+### Session expiration
 Without expiration, session history will accumulate indefinitely. Expiring keys improves memory usage and ensures privacy.
 
 ```redis:[run_confirmation=true] Session expiration
@@ -57,7 +57,7 @@ TTL user:alice:history:session_001
 PERSIST user:alice:history:session_001
 ```
 
-### Rate Limiting
+### Rate limiting
 Rate limiting prevents abuse and ensures fair usage across users. Redis hashes with field-level TTL via `HSETEX` are ideal for this.
 
 ```redis:[run_confirmation=true] Initialize Rate Limiting
@@ -92,7 +92,7 @@ HSETEX user:alice:rate_limit EX 86400 FIELDS 1 requests_per_day 1
 HGETALL user:alice:rate_limit
 ```
 
-### User Memory (Persistent Preferences)
+### User memory (persistent preferences)
 AI assistants become more helpful when they remember user preferences, schedules, or relevant facts. This persistent memory enables personalization over time.
 
 ```redis:[run_confirmation=true] Store User Preferences
@@ -116,7 +116,7 @@ HSET user:alice:personal:002 user_id "alice" content "has a golden retriever nam
 HSET user:alice:personal:003 user_id "alice" content "married to Bob, two kids Sarah (8) and Tom (5)" importance 9 timestamp 1717935000 embedding "\x40\x60\x00\x00\x40\x00\x00\x00\x3f\x40\x00\x00\x40\x80\x00\x00\x40\x20\x00\x00\x3f\x80\x00\x00\x40\x40\x00\x00\x3f\x00\x00\x00"
 ```
 
-### Vector Search: Semantic Memory Recall
+### Vector search: semantic memory recall
 Semantic search allows AI to retrieve relevant memory even when exact keywords don't match. For example, a query about "meetings" might return facts about "morning appointments."
 
 Indexing persistent memory (User Memory) for semantically meaningful search.
@@ -165,7 +165,7 @@ FT.SEARCH idx:preferences
     DIALECT 2
 ```
 
-### Memory State Monitoring
+### Memory state monitoring
 Understanding what's stored in memory helps debug issues, optimize performance, and ensure data quality. It's also essential for user privacy compliance.
 ```redis:[run_confirmation=false] Monitor user sessions
 // Get approximate memory usage of session
@@ -175,7 +175,7 @@ MEMORY USAGE user:alice:history:session_001
 LLEN user:alice:history:session_001
 TTL user:alice:history:session_001
 ```
-### Data Cleanup
+### Data cleanup
 Remove all data related to a user (e.g., for GDPR compliance).
 
 ```redis:[run_confirmation=true] Delete user data
@@ -194,7 +194,7 @@ DEL user:alice:work:002
 DEL user:alice:work:003
 ```
 
-### Next Steps
+### Next steps
 Now that your assistant has memory and meaning, you can:
     - Combine with RAG Pipelines
     - Use sentence-transformers to generate high-dimensional vectors
