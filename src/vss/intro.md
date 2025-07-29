@@ -29,4 +29,4 @@ You can use Redis 8 as a vector database, which allows you to:
 OR \
 [RediSearch](https://github.com/RediSearch/RediSearch/) >=2.8.11 \
 OR \
-A free Redis instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=timeseries_tutorial).
+A free Redis instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=vector_search_tutorial).
