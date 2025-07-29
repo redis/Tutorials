@@ -1,4 +1,4 @@
-The Redis Query Engine offers an enhanced Redis experience via the following search and query features:
+The Redis Query Engine offers an enhanced Redis experience using the following search and query features:
 
 - A rich query language
 - Incremental indexing on JSON and hash documents

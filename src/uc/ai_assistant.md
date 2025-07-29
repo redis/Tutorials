@@ -1,6 +1,6 @@
 This tutorial demonstrates how to build an AI assistant's memory system with Redis as its memory core.
 
-**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes - ideal for rate limiting to ensure fair resource usage.
+**Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTLs for hashes - ideal for rate limiting to ensure fair resource usage.
 
 ### Architecture overview
 | Layer | Description | Data type |
@@ -58,7 +58,7 @@ PERSIST user:alice:history:session_001
 ```
 
 ### Rate limiting
-Rate limiting prevents abuse and ensures fair usage across users. Redis hashes with field-level TTL via `HSETEX` are ideal for this.
+Rate limiting prevents abuse and ensures fair usage across users. Redis hashes with field-level TTLs applied using `HSETEX` are ideal for this.
 
 ```redis:[run_confirmation=true] Initialize Rate Limiting
 // On first request - set counter with 1-minute TTL
@@ -80,7 +80,7 @@ TTL user:alice:rate_limit
 ```
 **Optionally**: if the count exceeds the allowed threshold, deny the operation.
 
-Different time windows serve different purposes - per-minute prevents burst attacks, per-hour prevents sustained abuse, per-day enforces usage quotas.
+Different time windows serve different purposes: per-minute windows prevent burst attacks; per-hour windows prevent sustained abuse; and per-day windows enforce usage quotas.
 ```redis:[run_confirmation=true] Rate Limiting with Different Time Windows
 // Set multiple rate limits with different TTLs
 HSETEX user:alice:rate_limit EX 60 FIELDS 2 requests_per_minute 1 requests_per_hour 1

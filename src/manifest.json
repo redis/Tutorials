@@ -103,7 +103,7 @@
           "type": "internal-link",
           "id": "sq-intro",
           "label": "Introduction",
-          "summary": "Try real-time searching and perform complex structured queries without compromising the database performance.",
+          "summary": "Try real-time searching and perform complex structured queries without compromising database performance.",
           "args": {
             "path": "/sq/intro.md"
           }

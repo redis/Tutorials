@@ -133,7 +133,7 @@ JSON.GET obj2 $.b[0]
 JSON.GET obj2 $.*[0]
 ```
 
-JSON data structure also supports slice syntax for arrays: `[start:`end`:`step`]`, where `start`, `end`, and `step` are indexes.
+The JSON data structure also supports slice syntax for arrays: `[start:`end`:`step`]`, where `start`, `end`, and `step` are indexes.
 If the current node is an array, an array containing elements extracted from an array are returned, based on a `start` index, an `end` index, and a `step` index.
 Array indexes are zero-based; the first element is index 0. Start Index is inclusive; End index is not inclusive.
 The following rules apply:
