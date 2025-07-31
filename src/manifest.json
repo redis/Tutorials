@@ -40,7 +40,7 @@
     {
       "type": "group",
       "id": "vss",
-      "label": "Vector search explained",
+      "label": "Vector search examples",
       "args": {
         "initialIsOpen": false
       },
