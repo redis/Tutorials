@@ -7,7 +7,7 @@ The Redis Query Engine offers an enhanced Redis experience using the following s
 - Geospatial queries
 - Aggregations
 
-The Redis Query Engine features you to use Redis as a:
+The Redis Query Engine features allow you to use Redis as a:
 
 - Document database
 - Vector database
