@@ -69,7 +69,7 @@
           "label": "Building personalized recommendations",
           "summary": "Suggest movies based on the true meaning of plots or themes.",
           "args": {
-            "path": "/uc/personalized_recommendations.md"
+            "path": "/vss/personalized_recommendations.md"
           }
         },
         {
@@ -78,7 +78,7 @@
           "label": "Creating an AI Assistant",
           "summary": "An assistant that temporarily remembers conversations and understands their meaning.",
           "args": {
-            "path": "/uc/ai_assistant.md"
+            "path": "/vss/ai_assistant.md"
           }
         },
         {
