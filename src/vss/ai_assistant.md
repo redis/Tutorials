@@ -1,11 +1,11 @@
 This intelligent AI assistant is designed to support real-world, multi-session use with Redis as its memory core.
 
 What you get:
-    - **Smart Memory**: Ephemeral context that expires automatically, long-term facts retained forever
-    - **Semantic Search**: Recall relevant info by meaning using vector search
-    - **Zero Maintenance**: Auto-expiring short-term memory without a need to track timestamps manually
-    - **Multi-User**: Isolated memory per user
-    - **Learning**: Assistant can "understand" each user better the more it's used
+  - **Smart Memory**: Ephemeral context that expires automatically, long-term facts retained forever
+  - **Semantic Search**: Recall relevant info by meaning using vector search
+  - **Zero Maintenance**: Auto-expiring short-term memory without a need to track timestamps manually
+  - **Multi-User**: Isolated memory per user
+  - **Learning**: Assistant can "understand" each user better the more it's used
 
 **Note**: Requires [Redis 8](https://hub.docker.com/_/redis/tags) for `HSETEX`, which adds per-field TTL for hashes, which is ideal for managing short-term memory with precision.
 
