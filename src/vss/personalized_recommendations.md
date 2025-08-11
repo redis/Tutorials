@@ -3,7 +3,7 @@ Imagine building a movie recommendation app that goes beyond keyword matching. Y
 ### Store movie documents with vector embeddings
 Semantic search uses vector embeddings — numeric representations of text that capture meaning, enabling search by intent rather than keywords.
 
-We'll import a dataset of plot summaries, each paired with an embedding vector.
+You'll import a dataset of plot summaries, each paired with an embedding vector.
 
 Each movie is stored as a JSON document with:
   - `title`, `genres`, `year`, `plot`
