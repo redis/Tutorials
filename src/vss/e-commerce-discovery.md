@@ -3,7 +3,7 @@ This tutorial shows how to use Redis as a vector database with a bike shop examp
 To run these queries, you need a vector representation (vector embedding) of your text or images.
 
 **Note:**
-> This is a simple example for illustration. Real embeddings can be much larger. For a more realistic use case, see the [vector search quick start guide](https://redis.io/docs/latest/develop/get-started/vector-database/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+> This is a simple example for illustration. Real embeddings can be much larger. For a more realistic use case, see the [vector search quick start guide](https://redis.io/docs/latest/develop/get-started/vector-database/?utm_source=redisinsight&utm_medium=main&utm_campaign=vector_search_tutorial).
 
 ```redis A hash with vector embeddings
 HSET bikes:10000  
