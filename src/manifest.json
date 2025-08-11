@@ -39,6 +39,135 @@
     },
     {
       "type": "group",
+      "id": "vss",
+      "label": "Vector search examples",
+      "args": {
+        "initialIsOpen": false
+      },
+      "children": [
+        {
+          "type": "internal-link",
+          "id": "vss-intro",
+          "label": "Introduction",
+          "summary": "Understand how to use Redis as a vector database.",
+          "args": {
+            "path": "/vss/intro.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "e-commerce-discovery",
+          "label": "E-commerce Discovery",
+          "summary": "Find products by meaning, not just keywords.",
+          "args": {
+            "path": "/vss/e-commerce-discovery.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "personalized_recommendations",
+          "label": "Building personalized recommendations",
+          "summary": "Suggest movies based on the true meaning of plots or themes.",
+          "args": {
+            "path": "/vss/personalized_recommendations.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "ai_assistant",
+          "label": "Creating an AI Assistant",
+          "summary": "An assistant that temporarily remembers conversations and understands their meaning.",
+          "args": {
+            "path": "/vss/ai_assistant.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "vss-learn-more",
+          "label": "Learn more",
+          "args": {
+            "path": "/vss/learn-more.md"
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "id": "sq",
+      "label": "How to query your data",
+      "args": {
+        "initialIsOpen": false
+      },
+      "children": [
+        {
+          "type": "internal-link",
+          "id": "sq-intro",
+          "label": "Introduction",
+          "summary": "Try real-time searching and perform complex structured queries without compromising database performance.",
+          "args": {
+            "path": "/sq/intro.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-exact-match",
+          "label": "Exact match",
+          "args": {
+            "path": "/sq/exact-match.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-full-text",
+          "label": "Full-text search",
+          "args": {
+            "path": "/sq/full-text.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-range",
+          "label": "Range queries",
+          "args": {
+            "path": "/sq/range.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-geospatial",
+          "label": "Geospatial queries",
+          "args": {
+            "path": "/sq/geospatial.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-combined",
+          "label": "Combined queries",
+          "args": {
+            "path": "/sq/combined.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-aggregations",
+          "label": "Analytic and transformative queries",
+          "args": {
+            "path": "/sq/aggregations.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "sq-learn-more",
+          "label": "Learn more",
+          "args": {
+            "path": "/sq/learn-more.md"
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
       "id": "ds",
       "label": "Data structures explained",
       "args": {
@@ -306,124 +435,6 @@
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "group",
-      "id": "sq",
-      "label": "How to query your data",
-      "args": {
-        "initialIsOpen": false
-      },
-      "children": [
-        {
-          "type": "internal-link",
-          "id": "sq-intro",
-          "label": "Introduction",
-          "summary": "Try real-time searching and perform complex structured queries without compromising the database performance.",
-          "args": {
-            "path": "/sq/intro.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-exact-match",
-          "label": "Exact match",
-          "args": {
-            "path": "/sq/exact-match.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-full-text",
-          "label": "Full-text search",
-          "args": {
-            "path": "/sq/full-text.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-range",
-          "label": "Range queries",
-          "args": {
-            "path": "/sq/range.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-geospatial",
-          "label": "Geospatial queries",
-          "args": {
-            "path": "/sq/geospatial.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-combined",
-          "label": "Combined queries",
-          "args": {
-            "path": "/sq/combined.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-aggregations",
-          "label": "Analytic and transformative queries",
-          "args": {
-            "path": "/sq/aggregations.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "sq-learn-more",
-          "label": "Learn more",
-          "args": {
-            "path": "/sq/learn-more.md"
-          }
-        }
-      ]
-    },
-    {
-      "type": "group",
-      "id": "vss",
-      "label": "Vector search explained",
-      "args": {
-        "initialIsOpen": false
-      },
-      "children": [
-        {
-          "type": "internal-link",
-          "id": "vss-intro",
-          "label": "Introduction",
-          "summary": "Understand how to use Redis as a vector database.",
-          "args": {
-            "path": "/vss/intro.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "vss-vectors-basic",
-          "label": "Vector search (basic)",
-          "args": {
-            "path": "/vss/vectors-basic.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "vss-vectors-adv-hash",
-          "label": "Vector search (advanced)",
-          "args": {
-            "path": "/vss/vectors-adv-hash.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "vss-learn-more",
-          "label": "Learn more",
-          "args": {
-            "path": "/vss/learn-more.md"
-          }
         }
       ]
     }
