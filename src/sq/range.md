@@ -88,4 +88,4 @@ FT.SEARCH idx:bicycle "@price:[-inf 2000]" SORTBY price LIMIT 0 5
 
 ## Non-numeric range queries
 
-You can learn more about non-numeric range queries, such as [geospatial](https://redis.io/docs/interact/search-and-query/query/geo-spatial?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) or [vector search](https://redis.io/docs/interact/search-and-query/query/vector-search?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) queries, in their dedicated articles.
+You can learn more about non-numeric range queries, such as [geospatial](https://redis.io/docs/latest/develop/ai/search-and-query/query/geo-spatial/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) or [vector search](https://redis.io/docs/latest/develop/ai/search-and-query/query/vector-search/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) queries, in their dedicated articles.
