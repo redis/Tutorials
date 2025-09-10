@@ -55,8 +55,7 @@ This vector index attribute is broken down as follows:
     - `DIM 3` means that each vector is three dimensional.
     - The `DISTANCE_METRIC` is defined as `COSINE`. Other possible values are `IP` and `L2`.
 
-[//]: # (todo: Clarify where to riderct)
-See the [vector reference](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/vectors/) for more detailed information about each available option.
+See the [vector reference](https://redis.io/docs/latest/develop/ai/search-and-query/vectors/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) for more detailed information about each available option.
 
 ```redis Load some data
 JSON.SET user:1 $ '{"user": "samuel", "descr": "Samuel likes mountain and kid\'s bikes.", "labels": "mountain, kids", "vector_embedding": [0.9, 0.7, 0.2]}'
