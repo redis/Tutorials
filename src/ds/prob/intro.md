@@ -50,6 +50,6 @@ The following data structures trade perfect accuracy for extreme memory efficien
 
 [Redis Stack Server](https://redis.io/downloads/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial) >=7.2.0-v7 \
 OR \
-[RedisBloom](https://oss.redis.com/redisbloom/) >=2.6.10 \
+[RedisBloom](https://redis.io/docs/latest/develop/data-types/probabilistic/bloom-filter/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) >=2.6.10 \
 OR \
 A free Redis Stack instance on [Redis Cloud](https://redis.io/try-free/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial).

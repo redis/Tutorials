@@ -21,7 +21,7 @@ Each three-element list represents a preference score for:
 - road bikes
 
 **Note:**
-> This is just a trivial example that was created as an illustration. Vector embeddings for real projects can be huge. For a more realistic example, see this [vector search quick start guide](https://redis.io/docs/get-started/vector-database/).
+> This is just a trivial example that was created as an illustration. Vector embeddings for real projects can be huge. For a more realistic example, see this [vector search quick start guide](https://redis.io/solutions/vector-database/?utm_source=redisinsight&utm_medium=app&utm_campaign=vss_tutorial).
 
 To conduct vector searches, you must first create an index and then load your data.
 

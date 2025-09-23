@@ -10,9 +10,9 @@
 ### Blogs
 
 * [Probably and No: Redis, RedisBloom, and Bloom Filters](https://redis.com/blog/redis-redisbloom-bloom-filters/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial)
-* [ReBloom – Bloom Filter Datatype for Redis](https://redis.com/blog/rebloom-bloom-filter-datatype-redis/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial)
+* [ReBloom – Bloom Filter Datatype for Redis](https://redis.io/blog/bloom-filter/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials)
 * [Count Min Sketch: The Art and Science of Estimating Stuff](https://redis.com/blog/count-min-sketch-the-art-and-science-of-estimating-stuff/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial)
-* [Meet Top-K: an Awesome Probabilistic Addition to RedisBloom](https://redis.com/blog/meet-top-k-awesome-probabilistic-addition-redisbloom/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial)
+* [Meet Top-K: an Awesome Probabilistic Addition to RedisBloom](https://redis.io/blog/meet-top-k-awesome-probabilistic-addition-redis/?utm_source=redisinsight&utm_medium=app&utm_campaign=probabilistic_tutorial)
 
 ### Videos
 

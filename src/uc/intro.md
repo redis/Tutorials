@@ -1,6 +1,6 @@
 **Redis** is a powerful in-memory data structure store that can be used for various use cases due to its speed, simplicity, and versatility. In this tutorial, we'll explore several common use cases: matchmaking, job queue, leaderboard, and session store.
 
-If you haven't done so already, you can upload the sample data related to this tutorial by clicking the button below. You will also need support for [JSON](https://redis.io/docs/latest/develop/data-types/json/?utm_source=redisinsight&utm_medium=app&utm_campaign=RAG_tutorial) and [Search & query](https://redis.io/docs/latest/develop/interact/search-and-query/?utm_source=redisinsight&utm_medium=app&utm_campaign=RAG_tutorial) in your database to take advantage of this tutorial fully.
+If you haven't done so already, you can upload the sample data related to this tutorial by clicking the button below. You will also need support for [JSON](https://redis.io/docs/latest/develop/data-types/json/?utm_source=redisinsight&utm_medium=app&utm_campaign=RAG_tutorial) and [Search & query](https://redis.io/docs/latest/develop/ai/search-and-query/?utm_source=redisinsight&utm_medium=app&utm_campaign=RAG_tutorial) in your database to take advantage of this tutorial fully.
 
 ```redis:[run_confirmation=true] Upload Sample Data
 
@@ -269,7 +269,7 @@ HGETALL sample_session:074529275
 
 ### Job queue
 
-In many applications, tasks need to be processed asynchronously, such as maintaining a waiting list for a helpdesk where incoming support tickets are queued for processing. A job queue helps manage these tasks efficiently. In Redis, a [job queue](https://redis.io/glossary/redis-queue/) can be implemented using the List data structure. When a new task needs to be queued, it is added to the left end of the list (using the LPUSH command). When a worker is ready to process a task, it dequeues it from the right end of the list (using the RPOP command). 
+In many applications, tasks need to be processed asynchronously, such as maintaining a waiting list for a helpdesk where incoming support tickets are queued for processing. A job queue helps manage these tasks efficiently. In Redis, a [job queue](https://redis.io/glossary/redis-queue/?utm_source=redisinsight&utm_medium=app&utm_campaign=RAG_tutorial) can be implemented using the List data structure. When a new task needs to be queued, it is added to the left end of the list (using the LPUSH command). When a worker is ready to process a task, it dequeues it from the right end of the list (using the RPOP command). 
 
 
 ```redis:[run_confirmation=true] Create a job ticket
