@@ -1,6 +1,6 @@
 ### Documentation
 
-* [JSON capability home](https://redis.io/docs/data-types/json/?utm_source=redisinsight&utm_medium=app&utm_campaign=json_tutorial)
+* [JSON capability home](https://redis.io/docs/latest/develop/data-types/json/?utm_source=redisinsight&utm_medium=app&utm_campaign=json_tutorial)
 
 ### Social
 
