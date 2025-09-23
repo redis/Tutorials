@@ -50,7 +50,7 @@ BF.INSERT newBloomFilter CAPACITY 10000 ITEMS hello waves goodbye // creates the
 BF.INSERT bloomF NOCREATE ITEMS foo bar // tries to add 2 items to a filter with an error if the filter does not already exist
 ```
 
-You can read more about Bloom filters and their use cases [here](https://redis.io/docs/data-types/probabilistic/bloom-filter/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials). See [here](https://redis.io/commands/?group=bf&utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) for the complete list of Bloom filter commands.
+You can read more about Bloom filters and their use cases [here](https://redis.io/docs/latest/develop/data-types/probabilistic/bloom-filter/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials). See [here](https://redis.io/commands/?group=bf&utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) for the complete list of Bloom filter commands.
 
 ## Cuckoo Filters
 
