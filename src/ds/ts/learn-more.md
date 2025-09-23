@@ -1,6 +1,6 @@
 ### Documentation
 
-* [Time series data structure home](https://redis.io/learn/modules/redistimeseries?utm_campaign=timeseries_tutorial&utm_medium=app&utm_source=redisinsight)
+* [Time series data structure home](https://redis.io/learn/modules/redistimeseries/?utm_campaign=timeseries_tutorial&utm_medium=app&utm_source=redisinsight)
 
 ### Social
 
