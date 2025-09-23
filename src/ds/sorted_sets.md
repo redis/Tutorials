@@ -46,6 +46,6 @@ ZRANK bike:brands "Claude Shannon" WITHSCORE
 
 ### Resources
 
-- Sorted set type [reference page](https://redis.io/docs/data-types/sorted-sets?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+- Sorted set type [reference page](https://redis.io/docs/latest/develop/data-types/sorted-sets/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Entire list of [Redis sorted set commands](https://redis.io/commands/?group=sorted-set&utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Check out [Get started with Redis](https://university.redis.io/learningpath/14q8m6gilfwltm?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) learning path on Redis University for an introduction to working with all core data structures in Redis.
