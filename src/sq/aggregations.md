@@ -4,7 +4,7 @@ An aggregation query allows you to perform the following actions:
 - Group data based on field values.
 - Apply aggregation functions on the grouped data.
 
-This article explains the basic usage of the `FT.AGGREGATE` command. For further details, see the [command specification](https://redis.io/commands/ft.aggregate/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) and the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+This article explains the basic usage of the `FT.AGGREGATE` command. For further details, see the [command specification](https://redis.io/commands/ft.aggregate/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) and the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations//utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 
 The examples in this article use a schema with the following fields:
 
