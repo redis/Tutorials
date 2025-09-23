@@ -4,7 +4,7 @@ An aggregation query allows you to perform the following actions:
 - Group data based on field values.
 - Apply aggregation functions on the grouped data.
 
-This article explains the basic usage of the `FT.AGGREGATE` command. For further details, see the [command specification](https://redis.io/commands/ft.aggregate/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) and the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+This article explains the basic usage of the `FT.AGGREGATE` command. For further details, see the [command specification](https://redis.io/commands/ft.aggregate/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) and the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials/).
 
 The examples in this article use a schema with the following fields:
 
@@ -73,7 +73,7 @@ FT.AGGREGATE index "query_expr" ...  GROUPBY n "field_1" .. "field_n" REDUCE AGG
 Here is an explanation of the additional constructs:
 
 1. **Grouping**: you can group by one or many fields. Each ordered sequence of field values then defines one group. It's also possible to group by values that resulted from a previous `APPLY ... AS`.
-2. **Aggregation**: you must replace `AGG_FUNC` with one of the supported aggregation functions (e.g., `SUM` or `COUNT`). A complete list of functions is available in the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials). Replace `aggregated_result_field` with a value of your choice.
+2. **Aggregation**: you must replace `AGG_FUNC` with one of the supported aggregation functions (e.g., `SUM` or `COUNT`). A complete list of functions is available in the [aggregations reference documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/aggregations/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials). Replace `aggregated_result_field` with a value of your choice.
 
 The following query shows you how to group by the field `condition` and apply a reduction based on the previously derived `price_category`. The expression `@price<1000` causes a bicycle to have the price category `1` if its price is lower than 1000 USD. Otherwise, it has the price category `0`. The output is the number of affordable bicycles grouped by price category.
 

@@ -44,7 +44,7 @@ HINCRBY bike:1 price 100
 HINCRBY bike:1 price -100
 ```
 
-New in [Redis Community Edition version 7.4](https://hub.docker.com/layers/redis/redis-stack/7.4.0-v0/images/sha256-3e3c86603a81712d1311bc619ad124de15b2dca2b50722f23a4502b4d4054ba8) is the ability set the expiration time or the remaining time-to-live (TTL) for individual hash fields. This is called hash field expiration (HFE). HFE works just like [key expiration](https://redis.io/docs/latest/develop/use/keyspace/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials#key-expiration) and includes the following commands:
+New in [Redis Community Edition version 7.4](https://hub.docker.com/layers/redis/redis-stack/7.4.0-v0/images/sha256-3e3c86603a81712d1311bc619ad124de15b2dca2b50722f23a4502b4d4054ba8) is the ability set the expiration time or the remaining time-to-live (TTL) for individual hash fields. This is called hash field expiration (HFE). HFE works just like [key expiration](https://redis.io/docs/latest/develop/using-commands/keyspace/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials#key-expiration) and includes the following commands:
 
 - `hexpire` - set an expiration (time-to-live or TTL) in seconds on a hash key's field(s).
 - `hexpireat` - set a TTL as an absolute Unix timestamp (seconds since Unix epoch) on a hash key's field(s).
@@ -80,6 +80,6 @@ HGETALL hash
 ```
 ### Resources
 
-- Hash type [reference page](https://redis.io/docs/data-types/hashes?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+- Hash type [reference page](https://redis.io/docs/latest/develop/data-types/hashes/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Entire set of [Redis hash commands](https://redis.io/commands/?group=hash?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Check out [Get started with Redis](https://university.redis.io/learningpath/14q8m6gilfwltm?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) learning path on Redis University for an introduction to working with all core data structures in Redis.

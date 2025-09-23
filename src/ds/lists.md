@@ -80,6 +80,6 @@ KEYS bike:colors
 
 ### Resouces
 
-- List type [reference page](https://redis.io/docs/data-types/list?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+- List type [reference page](https://redis.io/docs/latest/develop/data-types/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Entire set of [Redis list commands](https://redis.io/commands/?group=list&utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Check out [Get started with Redis](https://university.redis.io/learningpath/14q8m6gilfwltm?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) learning path on Redis University for an introduction to working with all core data structures in Redis.

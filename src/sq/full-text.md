@@ -50,7 +50,7 @@ Instead of searching across all text fields, you might want to limit the search 
 FT.SEARCH index "@field: word"
 ```
 
-Words that occur very often in natural language, such as `the` or `a` for the English language, aren't indexed and will not return a search result. You can find further details in the [stop words article](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/stopwords?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+Words that occur very often in natural language, such as `the` or `a` for the English language, aren't indexed and will not return a search result. You can find further details in the [stop words article](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/stopwords/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 
 The following example searches for all bicycles that have the word 'kids' in the description:
 
@@ -60,7 +60,7 @@ FT.SEARCH idx:bicycle "@description: kids"
 
 ## Phrase
 
-A phrase is a sentence, sentence fragment, or small group of words. You can find further details about how to find exact phrases in the [exact match article](https://redis.io/docs/latest/develop/ai/search-and-query/query/exact-match?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+A phrase is a sentence, sentence fragment, or small group of words. You can find further details about how to find exact phrases in the [exact match article](https://redis.io/docs/latest/develop/ai/search-and-query/query/exact-match/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 
 
 ## Word prefix
