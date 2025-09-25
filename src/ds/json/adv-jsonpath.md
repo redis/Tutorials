@@ -1,6 +1,6 @@
 [JSONPath](https://goessner.net/articles/JsonPath/) expressions help you access specific elements within a JSON document, which is similar to how XPATH works for XML documents.
 JSONPath support was added to the JSON data structure in version 2.0.
-Before that, [a legacy form of pathing](https://redis.io/docs/data-types/json/path/#legacy-path-syntax) was supported.
+Before that, [a legacy form of pathing](https://redis.io/docs/latest/develop/data-types/json/path/?utm_source=redisinsight&utm_medium=app&utm_campaign=json_tutorial#legacy-path-syntax) was supported.
 Only JSONPath will be discussed in this tutorial.
 
 You've already seen several examples of JSONPath in previous parts of this tutorial. The next sections will describe JSONPath in more complete detail.

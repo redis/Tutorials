@@ -1,6 +1,6 @@
 ### Documentation
 
-* [Redis Query Engine home](https://redis.io/docs/interact/search-and-query/?utm_source=redisinsight&utm_medium=app&utm_campaign=query_engine_tutorial)
+* [Redis Query Engine home](https://redis.io/docs/latest/develop/ai/search-and-query/?utm_source=redisinsight&utm_medium=app&utm_campaign=query_engine_tutorial)
 * [Best practices for scalable Redis Query Engine](https://redis.io/docs/latest/operate/oss_and_stack/stack-with-enterprise/search/scalable-query-best-practices/?utm_source=redisinsight&utm_medium=app&utm_campaign=tutorials)
 
 ### Redis University
@@ -18,4 +18,4 @@
 
 ### Tutorials
 
-* [Examples](https://redis.io/docs/interact/search-and-query/query/?utm_source=redisinsight&utm_medium=app&utm_campaign=query_engine_tutorial)
+* [Examples](https://redis.io/docs/latest/develop/ai/search-and-query/query/?utm_source=redisinsight&utm_medium=app&utm_campaign=query_engine_tutorial)

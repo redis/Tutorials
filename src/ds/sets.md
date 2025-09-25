@@ -65,6 +65,6 @@ SMEMBERS bike:1:addons
 
 ### Resources
 
-- Set type [reference page](https://redis.io/docs/data-types/sets?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
+- Set type [reference page](https://redis.io/docs/latest/develop/data-types/sets/?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Entire list of [Redis set commands](https://redis.io/commands/?group=set&utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials).
 - Check out [Get started with Redis](https://university.redis.io/learningpath/14q8m6gilfwltm?utm_source=redisinsight&utm_medium=main&utm_campaign=tutorials) learning path on Redis University for an introduction to working with all core data structures in Redis.
