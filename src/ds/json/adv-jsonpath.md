@@ -1,5 +1,5 @@
 [JSONPath](https://goessner.net/articles/JsonPath/) expressions help you access specific elements within a JSON document, which is similar to how XPATH works for XML documents.
-JSONPath support was added to Redis Stack in version 2.0.
+JSONPath support was added to the JSON data structure in version 2.0.
 Before that, [a legacy form of pathing](https://redis.io/docs/latest/develop/data-types/json/path/?utm_source=redisinsight&utm_medium=app&utm_campaign=json_tutorial#legacy-path-syntax) was supported.
 Only JSONPath will be discussed in this tutorial.
 
@@ -133,7 +133,7 @@ JSON.GET obj2 $.b[0]
 JSON.GET obj2 $.*[0]
 ```
 
-Redis Stack also supports slice syntax for arrays: `[start:`end`:`step`]`, where `start`, `end`, and `step` are indexes.
+The JSON data structure also supports slice syntax for arrays: `[start:`end`:`step`]`, where `start`, `end`, and `step` are indexes.
 If the current node is an array, an array containing elements extracted from an array are returned, based on a `start` index, an `end` index, and a `step` index.
 Array indexes are zero-based; the first element is index 0. Start Index is inclusive; End index is not inclusive.
 The following rules apply:

@@ -112,7 +112,7 @@ JSON.GET obj2 '$.a[?(@!="a")]' // [1,2,3,"b","c",false,true,["a",1],{"a":1},{"b"
 #### Relational use cases using regular expression with the `=~` operator
 
 **Note**:
-> Redis Stack uses [Rust regular expressions syntax](https://docs.rs/regex/latest/regex/#syntax). Invalid regular expressions are not evaluated.
+> The JSON data structure uses [Rust regular expressions syntax](https://docs.rs/regex/latest/regex/#syntax). Invalid regular expressions are not evaluated.
 
 There are two cases:
 
