@@ -187,7 +187,7 @@ FT.SEARCH idx:bikes_vss
 With Redis 8, you can combine your regular searches (numeric, tag, geospatial, full-text) with vector searches. These are called hybrid queries.
 
 ```redis Hybrid query
-// Run a vector search for 'Female specific mountain bike' for bikes type "Mountain bikes" and with price between $3500 and $3500
+// Run a vector search for 'Female specific mountain bike' for bikes type "Mountain bikes" and with price between $3000 and $3500
 FT.SEARCH idx:bikes_vss 
     "(@type:{Mountain Bikes} @price:[3000 3500])=>[KNN 3 @description_embeddings $my_blob AS score ]" 
     RETURN 5 score brand type price description 
