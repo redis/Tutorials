@@ -12,9 +12,9 @@ It supports the storage and retrieval of vectors, which are essential for handli
 Here are some key features and components of Redis that make it suitable for RAG:
 
 1. **Redis as a vector database**: The following set of tutorials provide examples of how to use Redis as a vector database:
-    - [E-commerce Discovery](redisinsight:_?tutorialId=e-commerce-discovery)
+    - [E-commerce discovery](redisinsight:_?tutorialId=e-commerce-discovery)
     - [Building personalized recommendations](redisinsight:_?tutorialId=personalized_recommendations)
-    - [Creating an AI Assistant](redisinsight:_?tutorialId=ai_assistant)
+    - [Creating an AI assistant](redisinsight:_?tutorialId=ai_assistant)
 
 1. **Redis Vector Library (RedisVL)**: This library is designed to enhance the development of generative AI applications by efficiently managing vector data. It allows the storage of embeddings (vector representations of text) and facilitates fast similarity searches, which are crucial for retrieving relevant information in RAG.
 
